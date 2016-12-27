@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# TODO Add description
 """
 Add description here.
 """
@@ -23,9 +24,8 @@ FRITZ_USERNAME = "admin"
 FRITZ_PASSWORD = ""
 
 # ---- to do list ----
-# - check if pack() method leads to a better result in linux environment
-# - Disabled listboxes if no user is connected
-# - Check console output for errors and add exception handling in code
+# - TODO check if pack() method leads to a better result in linux environment
+# - TODO Check console output for errors and add exception handling in code
 
 
 def get_version():
@@ -483,10 +483,10 @@ class GUI:
             else:
                 self.ActionResult.insert("end", status[action])
 
+
 def get_cli_arguments():
-    FRITZ_IP_ADDRESS = "192.168.0.1"
     parser = argparse.ArgumentParser(description='Fritzbox Display Services')
-    parser.add_argument('-CP', '--CheckPrerequisits',
+    parser.add_argument('-CP', '--CheckPrerequisites',
                         action='store_true',
                         help='Check if all software requirements are met to run the application'
                         )
@@ -529,7 +529,6 @@ if __name__ == '__main__':
         print("Tkinter TK version            :", tkinter.TkVersion)
         print("\nOperating system platform     :", platform.system())
         print("Operating system version      :", platform.release())
-        print("Operating system distribution :", platform.dist())
         print("-----------------------------------------------")
         try:
             modules = pkg_resources.require(dependencies)
@@ -539,4 +538,3 @@ if __name__ == '__main__':
             print("Version required  :", Version_error.req)
             exit()
     main.mainloop()
-
