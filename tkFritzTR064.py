@@ -8,10 +8,13 @@ Add description here.
 import datetime
 import tkinter.ttk
 import xml.etree.ElementTree as eTree
+import argparse
+import pkg_resources
+import platform
 from tkinter import Tk, Menu, Label, Frame, messagebox
 from fritzconnection import FritzConnection
 
-__version__ = '0.5.0'
+__version__ = '0.5.2'
 
 # Default Values
 FRITZ_IP_ADDRESS = '192.168.0.1'
@@ -480,6 +483,18 @@ class GUI:
             else:
                 self.ActionResult.insert("end", status[action])
 
+def get_cli_arguments():
+    FRITZ_IP_ADDRESS = "192.168.0.1"
+    parser = argparse.ArgumentParser(description='Fritzbox Display Services')
+    parser.add_argument('-CP', '--CheckPrerequisits',
+                        action='store_true',
+                        help='Check if all software requirements are met to run the application'
+                        )
+
+    args = parser.parse_args()
+    return args
+
+
 # ----------------------------------------------------------
 # Main program
 # ----------------------------------------------------------
@@ -491,4 +506,37 @@ main.geometry('{}x{}'.format(1070, 530))
 main.minsize(width=400, height=400)
 
 program = GUI(main)
-main.mainloop()
+
+# ---------------------------------------------------------
+# cli-section:
+# ---------------------------------------------------------
+
+if __name__ == '__main__':
+    args = get_cli_arguments()
+    if args.CheckPrerequisits:
+        print("Checking software prerequisites ...")
+        dependencies = [
+            'FritzConnection>=0.5.1',
+            'lxml>=3.6.4',
+            'requests>=2.11.1'
+        ]
+        print("-----------------------------------------------")
+        print("lxml version                  :", pkg_resources.get_distribution("lxml").version)
+        print("FritzConnection version       :", pkg_resources.get_distribution("FritzConnection").version)
+        print("requests version              :", pkg_resources.get_distribution("requests").version)
+        print("\nPython version                :", platform.python_version())
+        print("Tkinter TCL version           :", tkinter.TclVersion)
+        print("Tkinter TK version            :", tkinter.TkVersion)
+        print("\nOperating system platform     :", platform.system())
+        print("Operating system version      :", platform.release())
+        print("Operating system distribution :", platform.dist())
+        print("-----------------------------------------------")
+        try:
+            modules = pkg_resources.require(dependencies)
+        except pkg_resources.VersionConflict as Version_error:
+            print("The following software dependency is not met:\n")
+            print("Version installed :", Version_error.dist)
+            print("Version required  :", Version_error.req)
+            exit()
+    main.mainloop()
+
