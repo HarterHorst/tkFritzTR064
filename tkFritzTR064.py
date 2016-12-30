@@ -513,7 +513,7 @@ program = GUI(main)
 
 if __name__ == '__main__':
     args = get_cli_arguments()
-    if args.CheckPrerequisits:
+    if args.CheckPrerequisites:
         print("Checking software prerequisites ...")
         dependencies = [
             'FritzConnection>=0.5.1',
