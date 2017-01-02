@@ -14,6 +14,7 @@ import pkg_resources
 import platform
 from tkinter import Tk, Menu, Label, Frame, messagebox
 from fritzconnection import FritzConnection
+from fritzconnection.fritzconnection import ServiceError, ActionError
 
 __version__ = '0.5.2'
 
@@ -471,17 +472,23 @@ class GUI:
         self.ActionResult.delete("1.0", "end")
         valuedictionary = w.item(w.focus())
         action = valuedictionary["text"]
+        error = ActionError
+        status = dict
 
         if valuedictionary["values"][0] == "in":
             self.ActionResult.insert("end", "Action ist kein Output.")
         else:
-            status = GUI.connection.call_action(GUI.currentservice, GUI.currentaction)
-            if not status[action]:
-                self.ActionResult.insert("end", "Error")
-            if status[action] is None:
-                self.ActionResult.insert("end", "None")
-            else:
-                self.ActionResult.insert("end", status[action])
+            try:
+                status = GUI.connection.call_action(GUI.currentservice, GUI.currentaction)
+                print(status[action])
+                if not status[action]:
+                    self.ActionResult.insert("end", "Error")
+                if status[action] is None:
+                    self.ActionResult.insert("end", "None")
+                else:
+                    self.ActionResult.insert("end", status[action])
+            except KeyError as error:
+                self.addstatusentry("Action Error " + str(error) + "\n")
 
 
 def get_cli_arguments():
